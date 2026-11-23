@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在线试排永乐字体的简体常用版和 Yongle Latin 英文版。">
+  <title>永乐 Yongle · 在线试排</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="fonts/coverage.js" defer></script>
+  <script src="trial.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./">永乐 <span>Yongle</span></a>
+    <nav aria-label="项目链接">
+      <a href="https://github.com/manibookmark/Yongle">GitHub</a>
+      <a href="#download">下载字体</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">永乐字体试排</p>
+        <h1 id="title">永乐大典</h1>
+        <p>取意于《永乐大典》抄本笔法的中文标题字体。</p>
+      </div>
+      <div class="seal" aria-hidden="true">永<br>乐</div>
+    </section>
+    <section class="studio" aria-label="在线试排">
+      <div class="controls">
+        <h2>在线试排</h2>
+        <label for="edition">字体</label>
+        <select id="edition">
+          <option value="sc">永乐 简体常用版</option>
+          <option value="latin">Yongle Latin 英文版</option>
+        </select>
+        <label for="copy">试排文字</label>
+        <textarea id="copy" rows="3" maxlength="300">永乐大典</textarea>
+        <div class="samples" id="samples" aria-label="试排样文"></div>
+        <label class="size-label" for="size">字号 <output id="size-value" for="size">88 px</output></label>
+        <input id="size" type="range" min="24" max="276" value="88">
+        <div class="samples" aria-label="常用字号">
+          <button type="button" data-size="36">36 px</button>
+          <button type="button" data-size="64">64 px</button>
+          <button type="button" data-size="276">276 px</button>
+        </div>
+      </div>
+      <div class="sheet" id="sheet">
+        <p id="preview" data-edition="sc" lang="zh-CN">永乐大典</p>
+        <p id="font-status" role="status">正在加载字体…</p>
+      </div>
+    </section>
+    <section class="download" id="download">
+      <h2>下载字体</h2>
+      <div class="editions">
+        <article>
+          <h3>永乐 简体常用版</h3>
+          <p>3,500 个一级汉字和 128 个配套字符。适合中文标题和中英混排。</p>
+          <a href="https://github.com/manibookmark/Yongle/releases/download/v1.0.0/Yongle-SCCommon-v1.0.0.zip">下载简体常用版 ZIP</a>
+        </article>
+        <article>
+          <h3>Yongle Latin</h3>
+          <p>独立安装的拉丁字母、数字和标点字形，适合英文标题。</p>
+          <a href="https://github.com/manibookmark/Yongle/releases/download/latin-v1.0.0/Yongle-Latin-v1.0.0.zip">下载英文版 ZIP</a>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer><a href="OFL.txt">SIL Open Font License 1.1</a></footer>
+</body>
+</html>

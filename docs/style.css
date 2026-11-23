@@ -1,0 +1,87 @@
+@font-face {
+  font-family: "Yongle Web SC";
+  src: url("fonts/Yongle-SCCommon.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Yongle Web Latin";
+  src: url("fonts/Yongle-Latin.woff2") format("woff2");
+  font-display: swap;
+}
+:root {
+  color-scheme: light;
+  --paper: #f6f3ec;
+  --ink: #242118;
+  --muted: #625b50;
+  --red: #91392d;
+  --line: #d7cec0;
+  font-family: system-ui, "Microsoft YaHei", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: var(--red); text-underline-offset: .25em; }
+button, select, textarea, input { font: inherit; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.topbar, main, footer { max-width: 79rem; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 3.5rem); }
+.topbar { min-height: 4.5rem; display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+.brand { color: var(--ink); font-weight: 700; text-decoration: none; }
+.brand span { margin-left: .4rem; color: var(--muted); font-weight: 500; }
+nav { display: flex; gap: clamp(1rem, 3vw, 2.5rem); }
+nav a { color: var(--ink); }
+.hero {
+  border-block: 1px solid var(--line);
+  min-height: 17rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem clamp(.4rem, 3vw, 2.6rem) 1.8rem;
+}
+.eyebrow { color: var(--red); font-weight: 700; letter-spacing: .12em; }
+.hero h1 { margin: .1em 0; font: 400 clamp(3rem, 12vw, 8.2rem)/1.08 "Yongle Web SC", serif; }
+.hero p:last-child { color: var(--muted); margin-bottom: 0; }
+.seal { padding: .35em .21em; border: 3px double var(--red); color: var(--red); font: 400 clamp(1.5rem, 4vw, 2.7rem)/.93 "Yongle Web SC", serif; text-align: center; }
+.studio { display: grid; grid-template-columns: minmax(15rem, .37fr) minmax(0, 1fr); margin-top: 1.6rem; border: 1px solid var(--line); }
+.controls { padding: 1.35rem; border-right: 1px solid var(--line); background: #f0ebe0; }
+h2 { margin: 0 0 1rem; font-size: 1.3rem; }
+.controls label { margin: 1rem 0 .4rem; display: block; font-size: .9rem; font-weight: 650; }
+select, textarea { display: block; width: 100%; border: 1px solid #a69b88; background: #fffdf7; color: var(--ink); padding: .55rem; border-radius: .2rem; }
+select {
+  appearance: none;
+  padding-right: 2rem;
+  background-image: linear-gradient(45deg, transparent 50%, var(--red) 50%), linear-gradient(135deg, var(--red) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+textarea { resize: vertical; }
+.samples { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .65rem; }
+button { cursor: pointer; border: 1px solid #a69b88; border-radius: .2rem; padding: .28rem .52rem; color: var(--ink); background: #fffdf7; font-size: .875rem; }
+button:hover { color: var(--red); border-color: var(--red); }
+.controls .size-label { display: flex; justify-content: space-between; gap: 1rem; }
+input[type="range"] { width: 100%; margin-inline: 0; accent-color: var(--red); }
+.sheet { min-width: 0; background: #fffdf7; display: flex; flex-direction: column; justify-content: space-between; }
+#preview {
+  margin: 0;
+  padding: clamp(.8rem, 3vw, 2.7rem);
+  font: 400 var(--specimen-size, 88px)/1.26 "Yongle Web SC", serif;
+  min-height: 18rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#preview[data-edition="latin"] { font-family: "Yongle Web Latin", serif; }
+#font-status { margin: 0; padding: .7rem 1rem; color: var(--muted); border-top: 1px solid var(--line); font-size: .875rem; overflow-wrap: anywhere; }
+.download { margin-block: 2.4rem; }
+.editions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.editions article { padding: 1rem 1.25rem; border-top: 2px solid var(--red); background: #fffdf7; }
+.editions h3 { margin: 0 0 .5rem; }
+.editions p { color: var(--muted); }
+footer { padding-block: 1.2rem; }
+@media (max-width: 720px) {
+  .studio, .editions { grid-template-columns: 1fr; }
+  .controls { border-right: 0; border-bottom: 1px solid var(--line); }
+  .hero { min-height: 12rem; }
+  #preview { min-height: 12rem; }
+}
