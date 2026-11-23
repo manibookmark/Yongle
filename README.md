@@ -12,7 +12,7 @@
 
 | 字体 | 适用场景 | 下载 |
 | --- | --- | --- |
-| 永乐 简体常用版 | 中文标题和中英混排。覆盖 3,500 个一级汉字及 128 个配套字符。 | [简体常用版 ZIP](https://github.com/manibookmark/Yongle/releases/download/v1.0.0/Yongle-SCCommon-v1.0.0.zip) |
+| 永乐 简体常用版 | 中文标题和中英混排。v1.0.1，覆盖 3,500 个一级汉字及 128 个配套字符。 | [简体常用版 ZIP](https://github.com/manibookmark/Yongle/releases/download/v1.0.1/Yongle-SCCommon-v1.0.1.zip) |
 | Yongle Latin | 英文标题。覆盖 99 个字符，包括 A–Z、a–z、数字、空格和常用标点。 | [英文版 ZIP](https://github.com/manibookmark/Yongle/releases/download/latin-v1.0.0/Yongle-Latin-v1.0.0.zip) |
 
 解压后安装 TTF，在软件的字体列表里选择对应名称。两版可以同时安装。

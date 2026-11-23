@@ -10,7 +10,7 @@ const editions = {
   sc: {
     family: "Yongle Web SC",
     lang: "zh-CN",
-    samples: ["永乐大典", "大明藏书", "中国古典", "山水之间", "本草经", "永乐 Yongle 2026"],
+    samples: ["永乐大典", "大明藏书", "中国古典", "山水之间", "本草经", "坚强意志", "永乐 Yongle 2026"],
   },
   latin: {
     family: "Yongle Web Latin",
