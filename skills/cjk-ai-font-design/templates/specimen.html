@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CJK AI Font Specimen Tester</title>
+<style>
+@font-face {
+  font-family: 'CustomCJK';
+  /* Replace with your generated .woff2 or .ttf path */
+  src: url('MyFont-SCCommon.woff2') format('woff2'),
+       url('MyFont-SCCommon.ttf') format('truetype');
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 24px; background: #f4efe6; color: #221c16; font: 15px/1.6 system-ui, sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.bar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; background: #fffdf8; padding: 14px 18px; border: 1px solid #dfd4c2; border-radius: 8px; margin-bottom: 18px; }
+label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.stage { background: #fffdf8; border: 1px solid #dfd4c2; border-radius: 8px; padding: 28px; min-height: 360px; }
+.stage.vertical { writing-mode: vertical-rl; max-height: 620px; overflow-x: auto; background-image: repeating-linear-gradient(to left, transparent, transparent 62px, rgba(180,60,45,.18) 62px, rgba(180,60,45,.18) 63px); }
+#preview { font-family: 'CustomCJK', 'Microsoft YaHei', sans-serif; font-size: 32px; line-height: 1.8; outline: none; white-space: pre-wrap; }
+.note { font-size: 13px; color: #6b6156; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 style="margin:0 0 12px;font-size:22px">中文字体离线试排器（支持横排 / 古籍朱丝栏竖排）</h1>
+  <div class="bar">
+    <label>字号 <input id="sz" type="range" min="16" max="96" value="32"> <span id="szv">32px</span></label>
+    <label>行距 <input id="lh" type="range" min="1.2" max="2.4" step="0.05" value="1.8"> <span id="lhv">1.8</span></label>
+    <label>字距 <input id="ls" type="range" min="-2" max="12" value="0"> <span id="lsv">0px</span></label>
+    <label><input id="vert" type="checkbox"> 竖排朱丝栏模式</label>
+  </div>
+  <div class="stage" id="stage">
+    <div id="preview" contenteditable="true">通往人家步行山水之间，天下从不复于旧规，直道而行，君子无害。
+永乐大典台阁楷韵：凿痹啄神，盏禄窝禅，叠捧矗腾，撬赣皆成佳字。
+可在此直接输入任意中文段落，测试 20px 正文灰度与 72px 标题细节。</div>
+  </div>
+  <p class="note">提示：将本文件放到你的字体 `.woff2` 同目录，修改 `@font-face` 中的文件名即可离线打开验收。</p>
+</div>
+<script>
+const p = document.getElementById('preview'), st = document.getElementById('stage');
+document.getElementById('sz').oninput = e => { p.style.fontSize = e.target.value + 'px'; szv.textContent = e.target.value + 'px'; };
+document.getElementById('lh').oninput = e => { p.style.lineHeight = e.target.value; lhv.textContent = e.target.value; };
+document.getElementById('ls').oninput = e => { p.style.letterSpacing = e.target.value + 'px'; lsv.textContent = e.target.value + 'px'; };
+document.getElementById('vert').onchange = e => st.classList.toggle('vertical', e.target.checked);
+</script>
+</body>
+</html>
