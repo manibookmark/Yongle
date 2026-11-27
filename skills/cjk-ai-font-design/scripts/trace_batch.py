@@ -22,7 +22,29 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.svgLib.path import parse_path
 from fontTools.ttLib import TTFont
+from fontTools.ttLib.tables._c_m_a_p import CmapSubtable
 import vtracer
+
+
+def map_codepoint(font: TTFont, cp: int, gname: str) -> None:
+    """Safely map BMP or SMP (>0xFFFF) codepoints without breaking format-4 subtables."""
+    cmap_table = font["cmap"]
+    if cp > 0xFFFF:
+        has_f12 = any(sub.format == 12 and sub.isUnicode() for sub in cmap_table.tables)
+        if not has_f12:
+            base_map = dict(font.getBestCmap())
+            for pid, eid in ((0, 4), (3, 10)):
+                sub = CmapSubtable.newSubtable(12)
+                sub.platformID = pid
+                sub.platEncID = eid
+                sub.language = 0
+                sub.cmap = dict(base_map)
+                cmap_table.tables.append(sub)
+    for sub in cmap_table.tables:
+        if not sub.isUnicode():
+            continue
+        if cp <= 0xFFFF or sub.format in (12, 13):
+            sub.cmap[cp] = gname
 
 
 def whitespace_edges(occupied: np.ndarray, fractions: list[float]) -> list[int]:
@@ -191,12 +213,10 @@ def main() -> None:
                 if cp in cmap:
                     gname = cmap[cp]
                 else:
-                    gname = f"uni{cp:04X}"
+                    gname = f"uni{cp:04X}" if cp <= 0xFFFF else f"u{cp:X}"
                     if gname not in order:
                         order.append(gname)
-                    for sub in font["cmap"].tables:
-                        if sub.isUnicode():
-                            sub.cmap[cp] = gname
+                    map_codepoint(font, cp, gname)
                 glyf[gname] = glyph
                 hmtx[gname] = (adv, glyph.xMin)
                 print(f"  {ch} (U+{cp:04X}): bounds=({glyph.xMin},{glyph.yMin},{glyph.xMax},{glyph.yMax}) contours={glyph.numberOfContours}")

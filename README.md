@@ -16,10 +16,16 @@
 
 | 字体 | 适用场景 | 下载 |
 | --- | --- | --- |
-| 永乐 简体常用版 | 中文标题、正文与中英数字混排。**v1.0.5**，覆盖 3,500 个一级汉字及 132 个永乐笔意配套字符（英数及中英文双标点）。 | [简体常用版 ZIP（v1.0.5）](https://github.com/manibookmark/Yongle/releases/download/v1.0.5/Yongle-SCCommon-v1.0.5.zip) |
+| 永乐 简体常用版 | 中文标题、正文与中英数字混排。**v1.0.6**，覆盖 3,586 个简体汉字（3,500 一级字 + 86 个古籍高频增补字）及 163 个永乐笔意配套字符（含 GPOS 连标点字距优化与拼音声调）。 | [简体常用版 ZIP（v1.0.6）](https://github.com/manibookmark/Yongle/releases/download/v1.0.6/Yongle-SCCommon-v1.0.6.zip) |
 | Yongle Latin | 英文标题。覆盖 99 个字符，包括 A–Z、a–z、数字、空格和常用标点。 | [英文版 ZIP](https://github.com/manibookmark/Yongle/releases/download/latin-v1.0.0/Yongle-Latin-v1.0.0.zip) |
 
 解压后安装 TTF，在软件的字体列表里选择对应名称即可。
+
+### v1.0.6 主要更新
+
+- **中文标点间距与 OpenType GPOS 字距精调**：重做 `……` 为严格 6 点等距永乐笔触圆点（消除三点间中缝）；收紧逗号、句号、冒号、顿号、分号与成对括号/书名号/引号（`，。、：；（）《》「」“”`）字宽，并新增 OpenType `GPOS kern` 连标点压缩表（如 `。」`、`》（`、`》，`、`：“`）；
+- **补齐 86 个古籍高频增补汉字**（`铳、祯、锭、桢、砻、蘸、碓、掣、箍、衢、淬、辕` 等），并新增 `×`、`→`、`℃`、`｜`、`︵`、`︶` 与全部 24 个汉语拼音声调母音（`ā–ǜ`），全库增至 **3,749** 个码位；
+- **开源造字 Skill 升级 SMP 扩展区支持**：`plan_batches.py`、`trace_batch.py`、`audit_glyphs.py`、`merge_release.py` 全面支持 Unicode 辅助平面扩展汉字（Format 12 `cmap`）与双参考生图审计。
 
 ### v1.0.5 主要更新
 

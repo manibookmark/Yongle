@@ -16,7 +16,12 @@ import statistics
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from fontTools.ttLib import TTFont
 from scipy import ndimage
+
+
+def is_cjk_ideograph(cp: int) -> bool:
+    return (0x3400 <= cp <= 0x9FFF) or (0xF900 <= cp <= 0xFAFF) or (0x20000 <= cp <= 0x323AF)
 
 
 def load_chars(chars_arg: str | None, chars_file: Path | None) -> list[str]:
@@ -30,11 +35,11 @@ def load_chars(chars_arg: str | None, chars_file: Path | None) -> list[str]:
             continue
         if tok.upper().startswith("U+"):
             c = chr(int(tok[2:], 16))
-            if c not in seen and 0x3400 <= ord(c) <= 0x9FFF:
+            if c not in seen and is_cjk_ideograph(ord(c)):
                 seen.add(c); out.append(c)
         else:
             for c in tok:
-                if c not in seen and 0x3400 <= ord(c) <= 0x9FFF:
+                if c not in seen and is_cjk_ideograph(ord(c)):
                     seen.add(c); out.append(c)
     return out
 
@@ -71,7 +76,7 @@ def analyze_glyph(font: ImageFont.FreeTypeFont, ch: str, px: int = 128):
 
 
 def make_structure_ref(chars: str, ref_font: Path, out_path: Path) -> None:
-    chars = "".join(c for c in chars if 0x3400 <= ord(c) <= 0x9FFF)
+    chars = "".join(c for c in chars if is_cjk_ideograph(ord(c)))
     if not chars:
         raise ValueError("No valid CJK characters given for --make-structure-ref")
     step = 160
@@ -89,6 +94,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--font", type=Path, help="Candidate TTF/OTF to audit")
     parser.add_argument("--ref-font", type=Path, required=True, help="Standard reference font (e.g. simkai.ttf)")
+    parser.add_argument("--fallback-ref-font", type=Path, help="Optional fallback ref font for SMP/rare chars (e.g. simsunb.ttf)")
     parser.add_argument("--chars", help="Inline characters to audit")
     parser.add_argument("--chars-file", type=Path, help="File listing characters (plain text or U+XXXX)")
     parser.add_argument("--out-dir", type=Path, required=True, help="Output directory for CSV & contact sheets")
@@ -109,12 +115,16 @@ def main() -> None:
 
     f_cand = ImageFont.truetype(str(args.font), 128)
     f_ref = ImageFont.truetype(str(args.ref_font), 128)
+    with TTFont(args.ref_font, fontNumber=0) as rtt:
+        ref_cmap = set(rtt.getBestCmap().keys())
+    f_ref_fb = ImageFont.truetype(str(args.fallback_ref_font), 128) if args.fallback_ref_font and args.fallback_ref_font.is_file() else None
 
     rows = []
     widths = []
     for ch in chars:
         a, fa, ha, sw = analyze_glyph(f_cand, ch)
-        b, fb, hb, _ = analyze_glyph(f_ref, ch)
+        rf = f_ref if (ord(ch) in ref_cmap or f_ref_fb is None) else f_ref_fb
+        b, fb, hb, _ = analyze_glyph(rf, ch)
         a_d = ndimage.binary_dilation(a, iterations=2)
         b_d = ndimage.binary_dilation(b, iterations=2)
         miss = float(np.logical_and(b, ~a_d).sum() / max(1, b.sum()))
@@ -139,6 +149,7 @@ def main() -> None:
 
     # Render side-by-side contact sheets for top suspicious glyphs (80 per page, 62px glyphs)
     fk = ImageFont.truetype(str(args.ref_font), 62)
+    fk_fb = ImageFont.truetype(str(args.fallback_ref_font), 62) if args.fallback_ref_font and args.fallback_ref_font.is_file() else None
     fv = ImageFont.truetype(str(args.font), 62)
     try:
         ui = ImageFont.truetype("msyh.ttc", 18)
@@ -159,7 +170,7 @@ def main() -> None:
             rr, cc = divmod(i, cols)
             x, y = 16 + cc * cw, 48 + rr * ch_h
             dr.rectangle([x, y, x + cw - 6, y + ch_h - 6], fill=(255, 255, 255), outline=(210, 200, 190))
-            dr.text((x + 8, y + 6), ch, fill=(135, 135, 135), font=fk)
+            dr.text((x + 8, y + 6), ch, fill=(135, 135, 135), font=fk if (ord(ch) in ref_cmap or fk_fb is None) else fk_fb)
             dr.text((x + 86, y + 6), ch, fill=(10, 10, 10), font=fv)
             dr.text((x + 8, y + 78), f"h:{ha}/{hb} s:{s:.2f} w:{sw:.0f}", fill=(160, 40, 30) if ha != hb else (85, 80, 75), font=sm)
         out_img = args.out_dir / f"suspect_page_{p_idx // per_page + 1}.png"

@@ -15,7 +15,11 @@ from pathlib import Path
 from PIL import ImageFont
 from fontTools.ttLib import TTFont
 
-from trace_batch import preserve_dependents
+from trace_batch import map_codepoint, preserve_dependents
+
+
+def is_cjk_ideograph(cp: int) -> bool:
+    return (0x3400 <= cp <= 0x9FFF) or (0xF900 <= cp <= 0xFAFF) or (0x20000 <= cp <= 0x323AF)
 
 
 def glyph_signature(font: TTFont, cp: int):
@@ -93,12 +97,10 @@ def main() -> None:
                         key = cmap[cp]
                         adv = hmtx[key][0]
                     else:
-                        key = f"uni{cp:04X}"
+                        key = f"uni{cp:04X}" if cp <= 0xFFFF else f"u{cp:X}"
                         if key not in order:
                             order.append(key)
-                        for sub in font["cmap"].tables:
-                            if sub.isUnicode():
-                                sub.cmap[cp] = key
+                        map_codepoint(font, cp, key)
                         adv = src["hmtx"][scmap[cp]][0]
                     glyf[key] = g
                     hmtx[key] = (adv, g.xMin)
@@ -120,7 +122,7 @@ def main() -> None:
             assert glyph_signature(new, cp) == glyph_signature(web, cp), f"Outline mismatch U+{cp:04X}"
             assert new["hmtx"][key] == web["hmtx"][key], f"Metrics mismatch U+{cp:04X}"
 
-    hanzi = [chr(cp) for cp in ncmap if 0x3400 <= cp <= 0x9FFF]
+    hanzi = [chr(cp) for cp in ncmap if is_cjk_ideograph(cp)]
     for px in (24, 48, 96):
         face = ImageFont.truetype(str(out_ttf), px)
         empty = [c for c in hanzi if not face.getmask(c).getbbox()]

@@ -14,6 +14,10 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 
+def is_cjk_ideograph(cp: int) -> bool:
+    return (0x3400 <= cp <= 0x9FFF) or (0xF900 <= cp <= 0xFAFF) or (0x20000 <= cp <= 0x323AF)
+
+
 def load_repertoire(path: Path) -> list[str]:
     """Read characters from either a U+XXXX list (one per line) or plain UTF-8 text."""
     text = path.read_text(encoding="utf-8-sig")
@@ -25,12 +29,12 @@ def load_repertoire(path: Path) -> list[str]:
             continue
         if token.upper().startswith("U+"):
             ch = chr(int(token[2:], 16))
-            if ch not in seen and 0x3400 <= ord(ch) <= 0x9FFF:
+            if ch not in seen and is_cjk_ideograph(ord(ch)):
                 seen.add(ch)
                 chars.append(ch)
         else:
             for ch in token:
-                if ch not in seen and 0x3400 <= ord(ch) <= 0x9FFF:
+                if ch not in seen and is_cjk_ideograph(ord(ch)):
                     seen.add(ch)
                     chars.append(ch)
     return chars

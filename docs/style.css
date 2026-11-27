@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Yongle Web SC";
-  src: url("fonts/Yongle-SCCommon.woff2?v=1.0.5") format("woff2");
+  src: url("fonts/Yongle-SCCommon.woff2?v=1.0.6") format("woff2");
   font-display: swap;
 }
 @font-face {
@@ -67,6 +67,8 @@ input[type="range"] { width: 100%; margin-inline: 0; accent-color: var(--red); }
   margin: 0;
   padding: clamp(.8rem, 3vw, 2.7rem);
   font: 400 var(--specimen-size, 88px)/1.26 "Yongle Web SC", serif;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1;
   min-height: 18rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
